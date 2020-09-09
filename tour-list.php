@@ -33,7 +33,78 @@
 		<!--//end-animate-->
 	</head>
 	<body>
-
+		<h2>Pencarian</h2>
+		<form action="" method="post">
+			<input type="text" name="kata_kunci" placeholder="Masukkan kata kunci" />
+			<input type="submit" name="submit" value="Cari" />
+		</form>
+		
+		<?php
+		//jika tombol Cari di klik akan menjalankan script berikutnya
+		if(isset($_POST['submit'])){
+			//membuat variabel $kata_kunci yang menyimpan data dari inputan kata kunci
+			$kata_kunci = $koneksi->real_escape_string(htmlentities(trim($_POST['kata_kunci'])));
+			
+			//cek apakah kata kunci kurang dari 3 karakter
+			if(strlen($kata_kunci)<3){
+				//pesan error jika kata kunci kurang dari 3 karakter
+				echo '<p>Kata kunci terlalu pendek.</p>';
+			}else{
+				//membuat variabel $where dengan nilai kosong
+				$where = "";
+				
+				//membuat variabel $kata_kunci_split untuk memecah kata kunci setiap ada spasi
+				$kata_kunci_split = preg_split('/[\s]+/', $kata_kunci);
+				//menghitung jumlah kata kunci dari split di atas
+				$total_kata_kunci = count($kata_kunci_split);
+				
+				//melakukan perulangan sebanyak kata kunci yang di masukkan
+				foreach($kata_kunci_split as $key=>$kunci){
+					//set variabel $where untuk query nanti
+					$where .= "kata_kunci LIKE '%$kunci%'";
+					//jika kata kunci lebih dari 1 (2 dan seterusnya) maka di tambahkan OR di perulangannya
+					if($key != ($total_kata_kunci - 1)){
+						$where .= " OR ";
+					}
+				}
+				
+				//melakukan query ke database dengan SELECT, dan dimana WHERE ini mengambil dari $where
+				$results = $koneksi->query("SELECT judul, LEFT(deskripsi, 60) as deskripsi, url FROM artikel WHERE $where");
+				//menghitung jumlah hasil query di atas
+				$num = $results->num_rows;
+				//jika tidak ada hasil
+				if($num == 0){
+					//pesan jika tidak ada hasil
+					echo '<p>Pencarian dengan kata kunci <b>'.$kata_kunci.'</b> tidak ada hasil.</p>';
+				}else{
+					//pesan jika ada hasil pencarian
+					echo '<p>Pencarian dari kata kunci <b>'.$kata_kunci.'</b> mendapatkan '.$num.' hasil:</p>';
+					//perulangan untuk menampilkan data
+					while($row = $results->fetch_assoc()){
+					//menampilkan data
+						<div class="container">
+							<div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
+									<img src="images/tour/<?php echo htmlentities($result->PackageImage); ?>" class="img-responsive" alt="">
+								</div>
+								<div class="rom-btm">
+								<div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
+									<h4>Nama: <?php echo htmlentities($result->PackageName); ?></h4>
+									<h6>Kategori : <?php echo htmlentities($result->PackageType); ?></h6>
+									<p><b>Lokasi :</b> <?php echo htmlentities($result->PackageLocation); ?></p>
+									<p><b>Fitur</b> <?php echo htmlentities($result->PackageFeatures); ?></p>
+								</div>
+							<div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
+									<h5>Rp <?php echo htmlentities($result->PackagePrice); ?>.000</h5>
+									<a href="package-details.php?pkgid=<?php echo htmlentities($result->PackageId); ?>" class="view">Details</a>
+								</div>
+						</div>
+						
+						<div class="clearfix"></div>
+					}
+				}
+			}
+		}
+		?>
 		<?php include('includes/header.php');?>
 
 		<!--- banner ---->
