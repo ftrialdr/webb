@@ -1,7 +1,25 @@
 <?php
-	session_start();
-	error_reporting(0);
-	include('includes/config.php');
+$con=mysqli_connect('localhost','root','','tms');
+include('includes/config.php');
+$per_page=5;
+$start=0;
+$current_page=1;
+if(isset($_GET['start'])){
+	$start=$_GET['start'];
+	if($start<=0){
+		$start=0;
+		$current_=1;
+	}else{
+		$current_page=$start; 
+		$start--;
+		$start=$start*$per_page;
+	}
+}
+$record=mysqli_num_rows(mysqli_query($con,"select PackageId,PackageName,PackageType,PackageLocation,PackagePrice,PackageFeatures,PackageImage from tms"));
+$pagi=ceil($record/$per_page);
+
+$sql="select PackageId,PackageName,PackageType,PackageLocation,PackagePrice,PackageFeatures,PackageImage from tb_tour limit $start,$per_page";
+$res=mysqli_query($con,$sql);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -107,6 +125,34 @@
 		?>
 		<?php include('includes/header.php');?>
 
+		<div class="container mt-100">
+		  <h2 class="mb-30">Pagination Example</h2>
+		  <ul class="list-group">
+			<?php 
+			if(mysqli_num_rows($res)>0){
+			while($row=mysqli_fetch_assoc($res)){?>
+				<li class="list-group-item"><?php echo $row['title']?></li>
+		    <?php } } else {?>
+			No records
+			<?php } ?>
+		  </ul>              
+		  <ul class="pagination mt-30">
+			<?php 
+			for($i=1;$i<=$pagi;$i++){
+			$class='';
+			if($current_page==$i){
+				?><li class="page-item active"><a class="page-link" href="javascript:void(0)"><?php echo $i?></a></li><?php
+			}else{
+			?>
+				<li class="page-item"><a class="page-link" href="?start=<?php echo $i?>"><?php echo $i?></a></li>
+			<?php
+			}
+			?>
+		    
+			<?php } ?>
+		  </ul>
+		</div>
+		
 		<!--- banner ---->
 		<div class="banner-3">
 			<div class="container">
