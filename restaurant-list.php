@@ -17,6 +17,9 @@
 	<link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 	<link href="css/font-awesome.css" rel="stylesheet">
 
+	<link href="images/logo.png" rel="icon">
+  	<link href="images/logo.png" rel="logo-icon">
+
 	<!-- Custom Theme files -->
 	<script src="js/jquery-1.12.0.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>

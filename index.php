@@ -22,6 +22,9 @@
 	<script src="js/jquery-1.12.0.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 
+	<link href="images/logo.png" rel="icon">
+  	<link href="images/logo.png" rel="logo-icon">
+
 	<!--animate-->
 	<link href="css/animate.css" rel="stylesheet" type="text/css" media="all">
 	<script src="js/wow.min.js"></script>
